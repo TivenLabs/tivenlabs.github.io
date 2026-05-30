@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RecipeScaler — Scale Any Recipe, Scan Recipe Cards | iOS App</title>
+<meta name="description" content="RecipeScaler is a free iPhone app that scales recipe ingredients to any number of servings and scans printed recipe cards with your camera. Halve it, double it, convert units — it does the fraction math for you, all on your device.">
+<link rel="canonical" href="https://tivenlabs.github.io/recipescaler/">
+<meta name="theme-color" content="#E8590C">
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="apple-touch-icon" href="img/icon.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="RecipeScaler — Scale Any Recipe">
+<meta property="og:description" content="Halve it, double it, convert units. The free iPhone app that does the recipe math for you — and scans recipe cards with your camera.">
+<meta property="og:url" content="https://tivenlabs.github.io/recipescaler/">
+<meta property="og:image" content="https://tivenlabs.github.io/recipescaler/img/icon.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RecipeScaler — Scale Any Recipe">
+<meta name="twitter:description" content="Halve it, double it, convert units. The free iPhone app that does the recipe math for you.">
+<meta name="twitter:image" content="https://tivenlabs.github.io/recipescaler/img/icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --orange: #E8590C;
+    --orange-deep: #C73E06;
+    --ink: #2B211C;
+    --ink-soft: #6E6058;
+    --cream: #FFF8F3;
+    --card: #FFFFFF;
+    --line: #F0E5DC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; line-height: 1.08; letter-spacing: -0.01em; }
+  .serif { font-family: "Fraunces", Georgia, serif; }
+
+  /* ---- Hero ---- */
+  .hero {
+    background: linear-gradient(158deg, #F26A1B 0%, #E8590C 46%, #C73E06 100%);
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero::after {
+    content: ""; position: absolute; top: -30%; left: -10%;
+    width: 60%; height: 90%; border-radius: 50%;
+    background: rgba(255,255,255,0.08); pointer-events: none;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px;
+    align-items: center; padding: 84px 0 92px; position: relative; z-index: 1;
+  }
+  .brandrow { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .brandrow img { width: 44px; height: 44px; border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+  .brandrow span { font-weight: 600; font-size: 17px; letter-spacing: 0.01em; opacity: 0.95; }
+  .hero h1 { font-size: clamp(38px, 5.4vw, 60px); font-weight: 600; margin-bottom: 20px; }
+  .hero p.lead { font-size: clamp(17px, 2vw, 21px); max-width: 30ch; opacity: 0.96; margin-bottom: 32px; }
+  .cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #000; color: #fff; text-decoration: none;
+    padding: 12px 18px; border-radius: 13px; transition: transform 0.15s ease;
+  }
+  .badge:hover { transform: translateY(-2px); }
+  .badge svg { width: 26px; height: 26px; }
+  .badge .b-small { font-size: 11px; opacity: 0.85; display: block; line-height: 1.1; }
+  .badge .b-big { font-size: 19px; font-weight: 600; line-height: 1.15; letter-spacing: 0.01em; }
+  .price-note { font-size: 14px; opacity: 0.9; }
+
+  /* phone */
+  .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .chip {
+    background: #fff; color: var(--ink);
+    font-size: 13.5px; font-weight: 600;
+    padding: 9px 16px; border-radius: 999px;
+    box-shadow: 0 10px 26px rgba(90,35,0,0.16);
+    display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  }
+  .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--orange); flex: none; }
+  .hero .chip { color: var(--ink); }
+  .phone {
+    width: 270px; max-width: 72vw; border-radius: 42px;
+    background: #1a1411; padding: 9px;
+    box-shadow: 0 30px 70px rgba(120,40,0,0.42), 0 8px 20px rgba(0,0,0,0.2);
+    transform: rotate(2deg);
+  }
+  .phone img { width: 100%; border-radius: 34px; display: block; }
+
+  /* ---- Intro / declarative (GEO) ---- */
+  .intro { padding: 64px 0 8px; }
+  .intro p {
+    font-size: clamp(20px, 2.6vw, 27px); font-family: "Fraunces", Georgia, serif;
+    font-weight: 500; max-width: 24ch; margin: 0 auto; text-align: center; color: var(--ink);
+  }
+  .intro .lede-sub { font-family: -apple-system, sans-serif; font-size: 17px; font-weight: 400; color: var(--ink-soft); max-width: 52ch; margin-top: 18px; }
+
+  /* ---- Features ---- */
+  .features { padding: 56px 0 24px; }
+  .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .feat { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 30px 26px; }
+  .feat .k { font-family: "Fraunces", serif; font-size: 30px; font-weight: 700; color: var(--orange); margin-bottom: 14px; }
+  .feat h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+  .feat p { font-size: 15.5px; color: var(--ink-soft); }
+
+  /* ---- Showcase band ---- */
+  .show { padding: 72px 0; }
+  .show-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .show-grid.flip { direction: rtl; }
+  .show-grid.flip > * { direction: ltr; }
+  .show h2 { font-size: clamp(28px, 3.6vw, 38px); font-weight: 600; margin-bottom: 16px; }
+  .show p { font-size: 17px; color: var(--ink-soft); max-width: 46ch; }
+  .show .phone { transform: none; width: 248px; margin: 0 auto; }
+  .show .tag { display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; }
+
+  /* ---- FAQ (GEO) ---- */
+  .faq { padding: 24px 0 80px; }
+  .faq h2 { font-size: clamp(28px, 3.6vw, 38px); font-weight: 600; text-align: center; margin-bottom: 40px; }
+  .qa { max-width: 760px; margin: 0 auto; }
+  .qa details { border-bottom: 1px solid var(--line); padding: 22px 4px; }
+  .qa summary { font-size: 18px; font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa summary::after { content: "+"; color: var(--orange); font-size: 26px; font-weight: 400; line-height: 1; }
+  .qa details[open] summary::after { content: "–"; }
+  .qa p { margin-top: 14px; color: var(--ink-soft); font-size: 16px; }
+
+  /* ---- closing CTA ---- */
+  .closing { background: linear-gradient(158deg, #F26A1B 0%, #E8590C 50%, #C73E06 100%); color: #fff; text-align: center; padding: 78px 0; }
+  .closing h2 { font-size: clamp(30px, 4vw, 44px); font-weight: 600; margin-bottom: 14px; }
+  .closing p { opacity: 0.95; margin-bottom: 30px; font-size: 18px; }
+  .closing .badge { background: #fff; color: #000; }
+  .closing .badge svg { fill: #000; }
+
+  /* ---- footer ---- */
+  footer { background: #211915; color: #cdbfb5; padding: 44px 0; font-size: 14.5px; }
+  footer .frow { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: center; }
+  footer a { color: #fff; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  footer .links { display: flex; gap: 22px; flex-wrap: wrap; }
+
+  @media (max-width: 800px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 8px; padding: 56px 0 64px; text-align: center; }
+    .brandrow { justify-content: center; }
+    .hero p.lead { margin-left: auto; margin-right: auto; }
+    .cta-row { justify-content: center; }
+    .phone-wrap { margin-top: 36px; }
+    .feat-grid { grid-template-columns: 1fr; }
+    .show-grid, .show-grid.flip { grid-template-columns: 1fr; direction: ltr; gap: 32px; text-align: center; }
+    .show p { margin-left: auto; margin-right: auto; }
+  }
+</style>
+
+<!-- GEO/SEO: structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "RecipeScaler: Scale Any Recipe",
+  "operatingSystem": "iOS 17.0 or later",
+  "applicationCategory": "LifestyleApplication",
+  "applicationSubCategory": "Food & Drink",
+  "description": "RecipeScaler is a free iPhone app that scales recipe ingredients to any number of servings and scans printed recipe cards with your camera. It halves, doubles, or rescales any recipe into clean fractions and converts cooking units — entirely on your device, with no account and no internet required.",
+  "url": "https://tivenlabs.github.io/recipescaler/",
+  "image": "https://tivenlabs.github.io/recipescaler/img/icon.png",
+  "author": { "@type": "Organization", "name": "Tiven Labs" },
+  "offers": [
+    { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free" },
+    { "@type": "Offer", "price": "1.99", "priceCurrency": "USD", "name": "Pro (one-time, lifetime)" }
+  ],
+  "downloadUrl": "https://apps.apple.com/us/app/recipescaler-scale-any-recipe/id6760977682"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is RecipeScaler free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Scaling recipes, scanning recipe cards, and the unit converter are all free. A one-time $1.99 Pro upgrade (no subscription) adds unlimited saved recipes, a shopping list, and a full-screen Cook Mode." } },
+    { "@type": "Question", "name": "Does RecipeScaler work offline?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Everything runs on your iPhone. There is no account, no internet connection required, and no data ever leaves your device." } },
+    { "@type": "Question", "name": "How does scanning a recipe work?",
+      "acceptedAnswer": { "@type": "Answer", "text": "You take a photo of a printed recipe card or page. RecipeScaler uses Apple's on-device Vision text recognition to read the ingredients and turn them into a list you can instantly scale. The photo never leaves your phone." } },
+    { "@type": "Question", "name": "Can it convert cooking units?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. It converts between cups, tablespoons, teaspoons, fluid ounces, milliliters, liters, grams, kilograms, ounces, and pounds, and shows measurements as clean fractions like 1/2 cup instead of decimals." } },
+    { "@type": "Question", "name": "Is my data private?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Completely. RecipeScaler collects no personal data, has no analytics or tracking, no ads, and no sign-in. Saved recipes are stored only on your device." } }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="brandrow">
+        <img src="img/icon.png" alt="RecipeScaler app icon">
+        <span>RecipeScaler</span>
+      </div>
+      <h1>Halve it. Double it.<br>Skip the math.</h1>
+      <p class="lead">Cooking for two tonight, or twelve this weekend? Tell RecipeScaler how many you're feeding and it rescales every ingredient for you — in real fractions, not weird decimals.</p>
+      <div class="cta-row">
+        <a class="badge" href="https://apps.apple.com/us/app/recipescaler-scale-any-recipe/id6760977682" aria-label="Download RecipeScaler on the App Store">
+          <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M16.36 12.78c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.82-.81-3-.79-1.54.02-2.96.9-3.75 2.28-1.6 2.78-.41 6.89 1.15 9.14.76 1.1 1.67 2.34 2.86 2.29 1.15-.05 1.58-.74 2.97-.74 1.38 0 1.77.74 2.98.72 1.23-.02 2.01-1.12 2.76-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.4-.92-2.42-3.65zM14.13 6.02c.64-.78 1.07-1.85.95-2.94-.92.04-2.03.61-2.69 1.38-.59.69-1.11 1.79-.97 2.85 1.02.08 2.07-.52 2.71-1.29z"/></svg>
+          <span><span class="b-small">Download on the</span><span class="b-big">App Store</span></span>
+        </a>
+        <span class="price-note">Free · iPhone · iOS 17+</span>
+      </div>
+    </div>
+    <div class="phone-wrap">
+      <div class="chip">Scaled to 2× automatically</div>
+      <div class="phone"><img src="img/shot-scale.png" alt="RecipeScaler scaling a cucumber salad recipe to double the servings"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ INTRO / declarative (GEO bait) ============ -->
+<section class="intro">
+  <div class="wrap">
+    <p>RecipeScaler is a free iPhone app that scales any recipe to the number of servings you actually need — and scans printed recipe cards with your camera.</p>
+    <p class="lede-sub" style="text-align:center;">No account. No internet. No little notepad of scribbled "okay so if I want 1.5 batches…" math. Just the amounts you need, ready to cook.</p>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="features">
+  <div class="wrap feat-grid">
+    <div class="feat">
+      <div class="k">½ · 2× · 3×</div>
+      <h3>Scale in one tap</h3>
+      <p>Punch in the servings — or hit the quick buttons — and every ingredient updates at once. Halving dinner for just you? Done. Tripling cookies for the bake sale? Also done.</p>
+    </div>
+    <div class="feat">
+      <div class="k">📷</div>
+      <h3>Scan the recipe card</h3>
+      <p>Got a recipe on paper or in a cookbook? Snap a photo and RecipeScaler reads the ingredients straight off the page, so you're not retyping a thing.</p>
+    </div>
+    <div class="feat">
+      <div class="k">¼ cup</div>
+      <h3>Real fractions, real units</h3>
+      <p>You get "¼ cup," not "0.25 cups." And when a recipe's in grams but your measuring cups aren't, the built-in converter sorts it out.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOWCASE 1 ============ -->
+<section class="show">
+  <div class="wrap show-grid">
+    <div>
+      <span class="tag">Scan &amp; go</span>
+      <h2>Point your camera at the page</h2>
+      <p>That stained index card from your mom, a photo from a cookbook, a printout from a website — snap it and the ingredients land in the app, ready to scale. It all happens right on your phone, so nothing gets uploaded anywhere.</p>
+    </div>
+    <div class="phone-wrap"><div class="chip">Read straight from a photo</div><div class="phone"><img src="img/shot-scan.png" alt="RecipeScaler showing five ingredients it found after scanning a recipe card"></div></div>
+  </div>
+</section>
+
+<!-- ============ SHOWCASE 2 ============ -->
+<section class="show" style="padding-top:0;">
+  <div class="wrap show-grid flip">
+    <div>
+      <span class="tag">Cups to grams, sorted</span>
+      <h2>Stop guessing at conversions</h2>
+      <p>Cups, tablespoons, teaspoons, fluid ounces, milliliters, liters, grams, kilograms, ounces, pounds — convert between any of them without leaving the kitchen to go look it up. Nice and quick when you're mid-recipe with floury hands.</p>
+    </div>
+    <div class="phone-wrap"><div class="chip">Cups → grams in a tap</div><div class="phone"><img src="img/shot-convert.png" alt="RecipeScaler's built-in cooking unit converter"></div></div>
+  </div>
+</section>
+
+<!-- ============ FAQ (GEO) ============ -->
+<section class="faq">
+  <div class="wrap">
+    <h2>The honest answers</h2>
+    <div class="qa">
+      <details open>
+        <summary>Is it free?</summary>
+        <p>Yep. Scaling recipes, scanning cards, and the unit converter are all free to use. There's an optional one-time $1.99 Pro upgrade (not a subscription) if you want unlimited saved recipes, a shopping list, and a full-screen Cook Mode that keeps your screen awake while you cook.</p>
+      </details>
+      <details>
+        <summary>Does it work without internet?</summary>
+        <p>It does. Everything runs right on your iPhone — no account, no sign-in, no connection needed. You can scale a recipe on a plane or in a cabin with zero bars.</p>
+      </details>
+      <details>
+        <summary>How does scanning a recipe actually work?</summary>
+        <p>You take a photo of a printed recipe — a card, a cookbook page, a printout. The app reads the ingredients using Apple's on-device text recognition and drops them into a list you can scale instantly. The photo never leaves your phone.</p>
+      </details>
+      <details>
+        <summary>Can it handle grams and cups?</summary>
+        <p>Yes — the built-in converter moves between cups, tablespoons, teaspoons, fluid ounces, milliliters, liters, grams, kilograms, ounces, and pounds. And it shows everything as tidy fractions instead of long decimals.</p>
+      </details>
+      <details>
+        <summary>What about my privacy?</summary>
+        <p>There's nothing to worry about here. No data collection, no tracking, no ads, no account. Your recipes and photos stay on your device, full stop.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING CTA ============ -->
+<section class="closing">
+  <div class="wrap">
+    <h2>Get cooking for any crowd</h2>
+    <p>Free on the App Store. Works on iPhone, iOS 17 and up.</p>
+    <a class="badge" href="https://apps.apple.com/us/app/recipescaler-scale-any-recipe/id6760977682" aria-label="Download RecipeScaler on the App Store">
+      <svg viewBox="0 0 24 24" fill="#000" aria-hidden="true"><path d="M16.36 12.78c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.82-.81-3-.79-1.54.02-2.96.9-3.75 2.28-1.6 2.78-.41 6.89 1.15 9.14.76 1.1 1.67 2.34 2.86 2.29 1.15-.05 1.58-.74 2.97-.74 1.38 0 1.77.74 2.98.72 1.23-.02 2.01-1.12 2.76-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.4-.92-2.42-3.65zM14.13 6.02c.64-.78 1.07-1.85.95-2.94-.92.04-2.03.61-2.69 1.38-.59.69-1.11 1.79-.97 2.85 1.02.08 2.07-.52 2.71-1.29z"/></svg>
+      <span><span class="b-small">Download on the</span><span class="b-big">App Store</span></span>
+    </a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap frow">
+    <div>© 2026 Tiven Labs · RecipeScaler</div>
+    <div class="links">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="https://apps.apple.com/us/app/recipescaler-scale-any-recipe/id6760977682">App Store</a>
+      <a href="mailto:support@tivenlabs.com">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
